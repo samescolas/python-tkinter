@@ -41,6 +41,11 @@ class GUI:
 		self.file_label.grid(row=1, column=0, columnspan=2, sticky=W)
 		self.file_button.grid(row=1, column=2, columnspan=1, sticky=W+E)
 		#self.reset_button.grid(row=3, column=1)
+		self.render_student_listbox()
+		self.render_attended_students_listbox()
+		self.render_section_combobox()
+		self.render_add_remove()
+		self.render_export_section()
 
 	def render_student_listbox(self):
 		self.student_listbox_contents = []
@@ -52,10 +57,11 @@ class GUI:
 										selectmode=MULTIPLE,
 										height=10)
 		selected_section = self.selected_section.get()
-		for i,s in enumerate(self.student_list.students):
-			if s.section == selected_section:
-				self.students_listbox.insert(i, str(s))
-				self.student_listbox_contents.append(s)
+		if self.student_list != None:
+			for i,s in enumerate(self.student_list.students):
+				if s.section == selected_section:
+					self.students_listbox.insert(i, str(s))
+					self.student_listbox_contents.append(s)
 		self.student_label.grid(row=2, column=0, columnspan=1, sticky=W)
 		self.students_listbox.grid(row=3, rowspan=13, column=0, columnspan=2, sticky=W+E)
 
@@ -75,11 +81,11 @@ class GUI:
 			
 
 	def render_section_combobox(self):
+		sections = self.student_list.sections if self.student_list != None else []
 		self.section_label = Label(self.master, text="Section:", font=('Arial', 15, 'bold'))
 		self.section_combobox = ttk.Combobox(self.master,
-											 height=len(self.student_list),
 											 textvariable=self.selected_section,
-											 values=self.student_list.sections)
+											 values=sections)
 		self.section_combobox.bind("<<ComboboxSelected>>", self.sectionchange)
 		self.section_label.grid(row=2, column=2)
 		self.section_combobox.grid(row=3, column=2, sticky=W+E+N+S)
